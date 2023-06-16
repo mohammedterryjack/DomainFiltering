@@ -1,15 +1,7 @@
 from eca import OneDimensionalElementaryCellularAutomata
 from numpy import ndarray, uint8
 from PIL import Image
-from streamlit import (
-    cache_data,
-    checkbox,
-    image,
-    number_input,
-    set_page_config,
-    slider,
-    tabs,
-)
+from streamlit import cache_data, image, number_input, set_page_config, slider, tabs
 
 from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
 from domain_filters.simple import SimpleDomainFilter
@@ -66,11 +58,10 @@ with simple_tab:
     radius = slider("Max Radius", 2, width // 2, 15)
     display_filtered_spacetime_simple(spacetime=spacetime, radius=radius)
 with fourier_tab:
-    binarisation_threshold = slider("Binarisation Threshold", 0.0, 1.0, 0.8)
+    binarisation_threshold = slider("Binarisation Threshold", 0.0, 1.0, 0.5)
     localisation = slider("Submatrix Size", 2, width // 2, 4)
-    invert = checkbox("Invert Colours")
     display_filtered_spacetime_fourier(
-        spacetime=not spacetime if invert else spacetime,
+        spacetime=spacetime,
         binarisation_threshold=binarisation_threshold,
         localisation=localisation,
     )
