@@ -5,7 +5,7 @@ from matplotlib.pyplot import show, subplots
 
 from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
 from domain_filters.simple import SimpleDomainFilter
-from somain_filters.contours_via_circles import detect_contours
+from domain_filters.contours_via_circles import detect_contours
 
 if __name__ == "__main__":
     parser = ArgumentParser()
