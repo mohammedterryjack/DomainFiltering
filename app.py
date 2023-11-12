@@ -20,8 +20,8 @@ def display_spacetime_as_image(spacetime: ndarray) -> None:
 
 
 @cache_data
-def display_filtered_spacetime_simple(spacetime: ndarray, radius: int) -> None:
-    filtered_spacetime = detect_contours(image=spacetime, neighbourhood_radius=4, threshold=0.2)    
+def display_filtered_spacetime_simple(spacetime: ndarray, radius: int, difference_threshold:float) -> None:
+    filtered_spacetime = detect_contours(image=spacetime, neighbourhood_radius=radius, threshold=difference_threshold)    
     display_spacetime_as_image(spacetime=filtered_spacetime)
 
 
@@ -53,8 +53,9 @@ spacetime = get_spacetime(width=width, height=height, rule=rule)
 with original_tab:
     display_spacetime_as_image(spacetime=spacetime)
 with simple_tab:
-    radius = slider("Max Radius", 2, width // 2, 15)
-    display_filtered_spacetime_simple(spacetime=spacetime, radius=radius)
+    radius = slider("Max Radius", 2, width // 2, 4)
+    threshold = slider("Max Difference", 0.0, 1.0, 0.2)
+    display_filtered_spacetime_simple(spacetime=spacetime, radius=radius, difference_threshold=threshold)
 with fourier_tab:
     binarisation_threshold = slider("Binarisation Threshold", 0.0, 1.0, 0.5)
     localisation = slider("Submatrix Size", 2, width // 2, 4)
