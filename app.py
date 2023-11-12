@@ -4,8 +4,7 @@ from PIL import Image
 from streamlit import cache_data, image, number_input, set_page_config, slider, tabs
 
 from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
-from domain_filters.simple import SimpleDomainFilter
-
+from domain_filters.contours_via_circles import detect_contours
 
 @cache_data
 def get_spacetime(width: int, height: int, rule: int) -> ndarray:
@@ -22,8 +21,7 @@ def display_spacetime_as_image(spacetime: ndarray) -> None:
 
 @cache_data
 def display_filtered_spacetime_simple(spacetime: ndarray, radius: int) -> None:
-    simple_domain_filter = SimpleDomainFilter(max_radius=radius)
-    filtered_spacetime = simple_domain_filter.classify_spacetime(spacetime=spacetime)
+    filtered_spacetime = detect_contours(image=spacetime, neighbourhood_radius=4, threshold=0.2)    
     display_spacetime_as_image(spacetime=filtered_spacetime)
 
 
@@ -44,7 +42,7 @@ set_page_config(
     initial_sidebar_state="expanded",
 )
 original_tab, simple_tab, fourier_tab = tabs(
-    ["Original", "Simple Heuristic", "Fourier Transform Self Filter"]
+    ["Original", "Semicircle Edge Detector", "Fourier Transform Self Filter"]
 )
 
 width = slider("Width", 10, 1000, 300)
