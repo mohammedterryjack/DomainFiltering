@@ -1,2 +1,3 @@
 eca
 numpy
+pot
