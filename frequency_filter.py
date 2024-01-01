@@ -1,4 +1,3 @@
-from eca import OneDimensionalElementaryCellularAutomata
 from matplotlib.pyplot import bar, show
 from numpy import array, concatenate, mean, ndarray, std
 
