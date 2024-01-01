@@ -3,8 +3,9 @@ from numpy import ndarray, uint8
 from PIL import Image
 from streamlit import cache_data, image, number_input, set_page_config, slider, tabs
 
-from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
 from domain_filters.contours_via_circles import detect_contours
+from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
+
 
 @cache_data
 def get_spacetime(width: int, height: int, rule: int) -> ndarray:
@@ -20,8 +21,12 @@ def display_spacetime_as_image(spacetime: ndarray) -> None:
 
 
 @cache_data
-def display_filtered_spacetime_simple(spacetime: ndarray, radius: int, difference_threshold:float) -> None:
-    filtered_spacetime = detect_contours(image=spacetime, neighbourhood_radius=radius, threshold=difference_threshold)    
+def display_filtered_spacetime_simple(
+    spacetime: ndarray, radius: int, difference_threshold: float
+) -> None:
+    filtered_spacetime = detect_contours(
+        image=spacetime, neighbourhood_radius=radius, threshold=difference_threshold
+    )
     display_spacetime_as_image(spacetime=filtered_spacetime)
 
 
@@ -55,7 +60,9 @@ with original_tab:
 with simple_tab:
     radius = slider("Max Radius", 2, width // 2, 4)
     threshold = slider("Max Difference", 0.0, 1.0, 0.2)
-    display_filtered_spacetime_simple(spacetime=spacetime, radius=radius, difference_threshold=threshold)
+    display_filtered_spacetime_simple(
+        spacetime=spacetime, radius=radius, difference_threshold=threshold
+    )
 with fourier_tab:
     binarisation_threshold = slider("Binarisation Threshold", 0.0, 1.0, 0.5)
     localisation = slider("Submatrix Size", 2, width // 2, 4)

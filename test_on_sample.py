@@ -1,15 +1,16 @@
-from matplotlib.pyplot import show, subplots
 from argparse import ArgumentParser
 from base64 import b64decode
 from json import load
 
 from matplotlib.pyplot import show, subplots
-from numpy import frombuffer, ndarray, array, ones_like, where
+from numpy import array, frombuffer, ndarray, ones_like, where
 
-from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
 from domain_filters.contours_via_circles import detect_contours
+from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
 from domain_filters.simple import SimpleDomainFilter
-from emd import get_score 
+from emd import get_score
+from frequency_filter import filter_by_lookup_frequency
+
 
 def generate_domain_pattern_from_pattern_signature(
     width: int,
@@ -21,6 +22,7 @@ def generate_domain_pattern_from_pattern_signature(
         for pattern in pattern_signature:
             rows.append(list(map(int, (pattern * width)[:width])))
     return rows[:depth]
+
 
 def generate_selected_domain_patterns(
     width: int, depth: int, pattern_signatures: list[list[str]]
@@ -35,6 +37,7 @@ def generate_selected_domain_patterns(
             )
         )
     return domain_patterns
+
 
 def fill_domains(
     n_domains: int, segmented_image: ndarray, background_patterns: list[list[list[int]]]
@@ -52,13 +55,14 @@ def string_to_array(image: str, shape: tuple[int, int]) -> ndarray:
     image_array = frombuffer(image_bytes, dtype=int)
     return image_array.reshape(shape).astype(bool).astype(int)
 
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--path", type=str, required=True)
-    parser.add_argument("--fourier_localisation_size",type=int,default=4)
-    parser.add_argument("--circles_neighbourhood_radius",type=int,default=4)
-    parser.add_argument("--circles_threshold",type=float,default=0.2)
-    parser.add_argument("--fourier_threshold",type=float, default=0.5)
+    parser.add_argument("--fourier_localisation_size", type=int, default=4)
+    parser.add_argument("--circles_neighbourhood_radius", type=int, default=4)
+    parser.add_argument("--circles_threshold", type=float, default=0.2)
+    parser.add_argument("--fourier_threshold", type=float, default=0.5)
 
     arguments = parser.parse_args()
 
@@ -70,7 +74,7 @@ if __name__ == "__main__":
     defects = string_to_array(
         image=data["annotated_defects"],
         shape=(data["metadata"]["time"], data["metadata"]["lattice_width"]),
-    ) 
+    )
     defects = 1 - defects
     domains = array(data["domain_regions"], dtype=int)
     spacetime = fill_domains(
@@ -85,28 +89,35 @@ if __name__ == "__main__":
 
     simple_domain_filter = SimpleDomainFilter()
     lftsf_domain_filter = LocalisedFourierTransformSelfFilter(
-        localisation_size=arguments.fourier_localisation_size, 
-        binarisation_threshold=arguments.fourier_threshold
+        localisation_size=arguments.fourier_localisation_size,
+        binarisation_threshold=arguments.fourier_threshold,
     )
     prediction_fourier = lftsf_domain_filter.classify_spacetime(spacetime=spacetime)
     prediction_circles = detect_contours(
-        image=spacetime, 
-        neighbourhood_radius=arguments.circles_neighbourhood_radius, 
-        threshold=arguments.circles_threshold
+        image=spacetime,
+        neighbourhood_radius=arguments.circles_neighbourhood_radius,
+        threshold=arguments.circles_threshold,
     )
     prediction_simple = simple_domain_filter.classify_spacetime(spacetime=spacetime)
+    prediction_frequency = filter_by_lookup_frequency(
+        spacetime_evolution=spacetime, display=True
+    )
 
     score_fourier = get_score(predicted=prediction_fourier, expected=defects)
     score_circles = get_score(predicted=prediction_circles, expected=defects)
     score_simple = get_score(predicted=array(prediction_simple), expected=defects)
+    score_frequency = get_score(predicted=prediction_frequency, expected=defects)
 
-    print(f"Scores:\n\tFourier={score_fourier}\n\tCircles={score_circles}\n\tSimple={score_simple}")
+    print(
+        f"Scores:\n\tFourier={score_fourier}\n\tCircles={score_circles}\n\tSimple={score_simple}\n\tLookup Frequency = {score_frequency}"
+    )
 
-    fig, axs = subplots(5)
+    fig, axs = subplots(6)
     fig.suptitle(arguments.path)
     axs[0].imshow(spacetime, cmap="gray")
     axs[1].imshow(defects, cmap="gray")
     axs[2].imshow(prediction_fourier, cmap="gray")
     axs[3].imshow(prediction_circles, cmap="gray")
     axs[4].imshow(prediction_simple, cmap="gray")
+    axs[5].imshow(prediction_frequency, cmap="gray")
     show()

@@ -3,9 +3,9 @@ from argparse import ArgumentParser
 from eca import OneDimensionalElementaryCellularAutomata
 from matplotlib.pyplot import show, subplots
 
+from domain_filters.contours_via_circles import detect_contours
 from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
 from domain_filters.simple import SimpleDomainFilter
-from domain_filters.contours_via_circles import detect_contours
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -26,7 +26,9 @@ if __name__ == "__main__":
     spacetime = ca.evolution()
     filtered_spacetime1 = simple_domain_filter.classify_spacetime(spacetime=spacetime)
     filtered_spacetime2 = lftsf_domain_filter.classify_spacetime(spacetime=spacetime)
-    filtered_spacetime3 = detect_contours(image=spacetime, neighbourhood_radius=4, threshold=0.2)
+    filtered_spacetime3 = detect_contours(
+        image=spacetime, neighbourhood_radius=4, threshold=0.2
+    )
     _, canvas = subplots(1, 4)
     canvas[0].imshow(spacetime, cmap="gray")
     canvas[1].imshow(filtered_spacetime1, cmap="gray")
