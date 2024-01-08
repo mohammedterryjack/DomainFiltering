@@ -3,15 +3,27 @@ from numpy import zeros_like, ndarray
 from collections import Counter
 
 def vectorise_neighbourhood(spacetime:ndarray, x:int, y:int, neighbourhood_radius:int) -> list[int]:
+    coordinates = [
+        (y,x),
+        (y,x-1),(y,x+1),
+        (y-1,x),(y+1,x),
+        (y-1,x-1),(y+1,x+1),
+        (y-1,x+1),(y+1,x-1),
+        (y-1,x+1),(y-1,x),(y-1,x-1),(y,x-1),(y+1,x-1),(y+1,x),(y+1,x+1),
+    ]
     vector = []
-    for y_ in range(y-neighbourhood_radius,y+neighbourhood_radius+1):
-       for x_ in range(x-neighbourhood_radius,x+neighbourhood_radius+1):
-           cell = spacetime[y_,x_]
-           vector.append(cell)
-    for x_ in range(x-neighbourhood_radius,x+neighbourhood_radius+1):
-       for y_ in range(y-neighbourhood_radius,y+neighbourhood_radius+1):
-           cell = spacetime[y_,x_]
-           vector.append(cell)
+    for coordinate in coordinates:
+        cell = spacetime[coordinate]
+        vector.append(cell)
+    # vector = []
+    # for y_ in range(y-neighbourhood_radius,y+neighbourhood_radius+1):
+    #   for x_ in range(x-neighbourhood_radius,x+neighbourhood_radius+1):
+    #       cell = spacetime[y_,x_]
+    #       vector.append(cell)
+    # for x_ in range(x-neighbourhood_radius,x+neighbourhood_radius+1):
+    #   for y_ in range(y-neighbourhood_radius,y+neighbourhood_radius+1):
+    #       cell = spacetime[y_,x_]
+    #       vector.append(cell)
     return vector 
 
 def complexity(spacetime:list[list[int]], x:int,y:int,r:int=1) -> float:
@@ -45,9 +57,9 @@ def local_kolmogorov_complexity(spacetime:ndarray) -> ndarray:
 from matplotlib.pyplot import imshow, show 
 from eca import OneDimensionalElementaryCellularAutomata 
 
-ca = OneDimensionalElementaryCellularAutomata(lattice_width=100)
-for _ in range(100):
-    ca.transition(1)
+ca = OneDimensionalElementaryCellularAutomata(lattice_width=400)
+for _ in range(400):
+    ca.transition(110)
 
 spacetime = ca.evolution()
 
