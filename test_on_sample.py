@@ -7,10 +7,13 @@ from numpy import array, frombuffer, ndarray, ones_like, where
 
 from domain_filters.contours_via_circles import detect_contours
 from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
+from domain_filters.local_kolmogorov_complexity_filter import (
+    local_kolmogorov_complexity,
+)
 from domain_filters.simple import SimpleDomainFilter
-from domain_filters.local_kolmogorov_complexity_filter import local_kolmogorov_complexity
 from emd import get_score
-#from frequency_filter import filter_by_lookup_frequency
+
+# from frequency_filter import filter_by_lookup_frequency
 
 
 def generate_domain_pattern_from_pattern_signature(
@@ -101,9 +104,9 @@ if __name__ == "__main__":
     )
     prediction_simple = simple_domain_filter.classify_spacetime(spacetime=spacetime)
     prediction_kolmogorov = local_kolmogorov_complexity(spacetime=spacetime)
-    #prediction_frequency = filter_by_lookup_frequency(
+    # prediction_frequency = filter_by_lookup_frequency(
     #    spacetime_evolution=spacetime, display=True
-    #)
+    # )
 
     score_fourier = get_score(predicted=prediction_fourier, expected=defects)
     score_circles = get_score(predicted=prediction_circles, expected=defects)
