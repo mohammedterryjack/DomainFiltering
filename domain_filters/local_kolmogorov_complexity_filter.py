@@ -85,14 +85,6 @@ def complexity(spacetime: list[list[int]], x: int, y: int, r: int) -> float:
     return (n - header) / total
 
 
-def binarise_by_most_common_value(spacetime: ndarray) -> ndarray:
-    # TODO: cutoff based on frequency - but below certain value not JUST the top one
-    most_common_value = Counter(
-        cell for row in spacetime.tolist() for cell in row
-    ).most_common(1)[0][0]
-    return spacetime != most_common_value
-
-
 def local_kolmogorov_complexity(
     spacetime: ndarray, neighbourhood_radius: int = 2
 ) -> ndarray:
@@ -103,9 +95,7 @@ def local_kolmogorov_complexity(
             filtered[y_, x_] = complexity(
                 spacetime=spacetime, x=x_, y=y_, r=neighbourhood_radius
             )
-    imshow(filtered)
-    show()
-    return binarise_by_most_common_value(filtered)
+    return filtered
 
 
 from eca import OneDimensionalElementaryCellularAutomata

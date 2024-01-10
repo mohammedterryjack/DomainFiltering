@@ -242,15 +242,7 @@ filtered_spacetime = local_statistical_complexity_filter(
     past_lightcone_to_statistical_complexity=past_lightcone_to_statistical_complexity,
     lightcone_depth=lightcone_depth,
 )
-_, filtered_spacetime_bw = threshold(
-    (filtered_spacetime * 255).astype("uint8"), 128, 255, THRESH_BINARY | THRESH_OTSU
-)
-filtered_spacetime_bw = filtered_spacetime_bw.clip(max=1)
-imshow(st)
-show()
 imshow(filtered_spacetime)
-show()
-imshow(filtered_spacetime_bw)
 show()
 
 # TODO: visualise the location of the same past light cone with two different future light cones
