@@ -19,13 +19,13 @@ def coordinates_lightcone(
     if lightcone_depth < 0:
         if t_end < 0 and not allow_partial_cones:
             return
-        rows = range(t, max(t_end, 0), -1)
+        rows = range(t - 1, max(t_end, 0), -1)
     else:
         if t_end >= max_time and not allow_partial_cones:
             return
-        rows = range(t, min(t_end, max_time))
+        rows = range(t + 1, min(t_end, max_time))
 
-    for row_index, t_ in enumerate(rows):
+    for row_index, t_ in enumerate(rows, start=1):
         span = row_index * spread_rate
         leftmost_index, rightmost_index = x - span, x + span
 
@@ -226,13 +226,14 @@ def spacetime(lattice_width: int, time: int, rule_number: int) -> ndarray:
 n_spacetimes = 1
 lightcone_depth = 5
 similarity_theta = 0.05
-lattice_width = 400
-time = 400
+lattice_width = 100
+time = 100
 rule_number = 110
 # sts = [spacetime(lattice_width=lattice_width,time=time, rule_number=rule_number) for _ in range(n_spacetimes)]
 st = spacetime(lattice_width=lattice_width, time=time, rule_number=rule_number)
+sts = [st]
 past_lightcone_to_statistical_complexity = statistical_complexity(
-    spacetimes=[st],
+    spacetimes=sts,
     lightcone_depth=lightcone_depth,
     causal_state_clustering_similarity_threshold=similarity_theta,
 )
@@ -251,3 +252,5 @@ imshow(filtered_spacetime)
 show()
 imshow(filtered_spacetime_bw)
 show()
+
+# TODO: visualise the location of the same past light cone with two different future light cones

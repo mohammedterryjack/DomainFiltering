@@ -63,3 +63,19 @@ def filter_by_lookup_frequency(
         bar(high_frequencies.keys(), high_frequencies.values())
         show()
     return filtered_spacetime
+
+
+# from eca import OneDimensionalElementaryCellularAutomata
+# from matplotlib.pyplot import imshow, show
+
+# ca = OneDimensionalElementaryCellularAutomata(lattice_width=400)
+# for _ in range(400):
+#     ca.transition(30)
+
+# spacetime = ca.evolution()
+
+# imshow(spacetime)
+# show()
+# filtered = filter_by_lookup_frequency(spacetime, display=True)
+# imshow(filtered)
+# show()
