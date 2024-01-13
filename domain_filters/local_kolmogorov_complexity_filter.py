@@ -7,69 +7,23 @@ from numpy import ndarray, zeros_like
 def vectorise_neighbourhood(
     spacetime: ndarray, x: int, y: int, neighbourhood_radius: int
 ) -> list[int]:
-    coordinates = [
-        # Neighbourhood radius = 1
-        # (y,x),
-        # (y,x-1),(y,x+1),
-        # (y-1,x),(y+1,x),
-        # (y-1,x-1),(y+1,x+1),
-        # (y-1,x+1),(y+1,x-1),
-        # (y-1,x+1),(y-1,x),(y-1,x-1),(y,x-1),(y+1,x-1),(y+1,x),(y+1,x+1),
-        # Neighbourhood radius = 2
-        (y, x - 2),
-        (y, x - 1),
-        (y, x + 1),
-        (y, x + 2),
-        (y - 2, x),
-        (y - 1, x),
-        (y + 1, x),
-        (y + 2, x),
-        (y - 2, x - 2),
-        (y - 1, x - 1),
-        (y + 1, x + 1),
-        (y + 2, x + 2),
-        (y - 2, x + 2),
-        (y - 1, x + 1),
-        (y + 1, x - 1),
-        (y + 2, x - 2),
-        (y, x),
-        (y - 1, x + 1),
-        (y - 1, x),
-        (y - 1, x - 1),
-        (y, x - 1),
-        (y + 1, x - 1),
-        (y + 1, x),
-        (y + 1, x + 1),
-        (y + 2, x + 2),
-        (y + 1, x + 2),
-        (y, x + 2),
-        (y - 1, x + 2),
-        (y - 2, x + 2),
-        (y - 2, x + 1),
-        (y - 2, x),
-        (y - 2, x - 1),
-        (y - 2, x - 2),
-        (y - 1, x - 2),
-        (y, x - 2),
-        (y + 1, x - 2),
-        (y + 2, x - 2),
-        (y + 2, x - 1),
-        (y + 2, x),
-        (y + 2, x + 1),
+    """Hilbert Curve for 3x3 grid to map 2d to 1d
+    
+     ___  
+     __| |
+    |____|
+    """
+    #TODO: use it inside a past lightcone instead of a 3x3 window
+    coordinates_hilbert_curve = [
+        (y-1,x-1), (y-1,x), 
+        (y,x), (y,x-1),
+        (y+1,x-1), (y+1,x), 
+        (y+1,x+1),(y,x+1),(y-1,x+1)
     ]
     vector = []
-    for coordinate in coordinates:
+    for coordinate in coordinates_hilbert_curve:
         cell = spacetime[coordinate]
         vector.append(cell)
-    # vector = []
-    # for y_ in range(y-neighbourhood_radius,y+neighbourhood_radius+1):
-    #   for x_ in range(x-neighbourhood_radius,x+neighbourhood_radius+1):
-    #       cell = spacetime[y_,x_]
-    #       vector.append(cell)
-    # for x_ in range(x-neighbourhood_radius,x+neighbourhood_radius+1):
-    #   for y_ in range(y-neighbourhood_radius,y+neighbourhood_radius+1):
-    #       cell = spacetime[y_,x_]
-    #       vector.append(cell)
     return vector
 
 

@@ -2,7 +2,6 @@ from argparse import ArgumentParser
 from base64 import b64decode
 from json import load
 
-from emd import get_score
 from matplotlib.pyplot import show, subplots
 from numpy import array, frombuffer, ndarray, ones_like, where
 
@@ -12,6 +11,7 @@ from domain_filters.local_kolmogorov_complexity_filter import (
     local_kolmogorov_complexity,
 )
 from domain_filters.simple import SimpleDomainFilter
+from metric import get_score
 
 # from frequency_filter import filter_by_lookup_frequency
 
