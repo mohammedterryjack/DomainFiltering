@@ -8,17 +8,22 @@ def vectorise_neighbourhood(
     spacetime: ndarray, x: int, y: int, neighbourhood_radius: int
 ) -> list[int]:
     """Hilbert Curve for 3x3 grid to map 2d to 1d
-    
-     ___  
+
+     ___
      __| |
     |____|
     """
-    #TODO: use it inside a past lightcone instead of a 3x3 window
+    # TODO: use it inside a past lightcone instead of a 3x3 window
     coordinates_hilbert_curve = [
-        (y-1,x-1), (y-1,x), 
-        (y,x), (y,x-1),
-        (y+1,x-1), (y+1,x), 
-        (y+1,x+1),(y,x+1),(y-1,x+1)
+        (y - 1, x - 1),
+        (y - 1, x),
+        (y, x),
+        (y, x - 1),
+        (y + 1, x - 1),
+        (y + 1, x),
+        (y + 1, x + 1),
+        (y, x + 1),
+        (y - 1, x + 1),
     ]
     vector = []
     for coordinate in coordinates_hilbert_curve:

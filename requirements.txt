@@ -1,3 +1,3 @@
 eca
 numpy
-pot
+numpy-hilbert-curve

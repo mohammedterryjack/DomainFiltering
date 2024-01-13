@@ -1,20 +1,23 @@
-from math import isnan
-
+from hilbert import decode
 from numpy import ndarray
-from ot import dist
+from scipy.spatial.distance import cosine
 
-# TODO: flatten 2d matrix into 1d vector
-# find cross-entropy loss (Good for imbalanced classes)
+
+def hilbert_flatten(matrix: ndarray, n_iterations: int = 8) -> ndarray:
+    """flatten 2d matrix into 1d vector using Hilbert Curve"""
+    h, w = matrix.shape
+    matrix_dimensions = 2
+    coordinates = tuple(
+        decode(range(h * w), matrix_dimensions, n_iterations).T.tolist()
+    )
+    return matrix[coordinates]
 
 
 def get_score(predicted: ndarray, expected: ndarray) -> float:
-    earth_movers_distance_2d = dist(predicted, expected)
-    normalisation_factor = earth_movers_distance_2d.max()
-    earth_movers_distance_2d_normalised = (
-        earth_movers_distance_2d / normalisation_factor
-    )
-    distance = (
-        earth_movers_distance_2d_normalised.sum()
-        / earth_movers_distance_2d_normalised.size
-    )
-    return 1.0 if isnan(distance) else 1 - distance
+    predicted_vector = hilbert_flatten(matrix=predicted)
+    expected_vector = hilbert_flatten(matrix=expected)
+
+    score = cosine(predicted_vector, expected_vector)
+    # TODO: change this to cross-entropy-loss
+    # TODO: there is something buggy here - ensure it doesnt go outside valid coordinates
+    return score
