@@ -8,7 +8,7 @@ from numpy import array, frombuffer, ndarray, ones_like, where
 from domain_filters.contours_via_circles import detect_contours
 from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
 from domain_filters.local_kolmogorov_complexity_filter import (
-    local_kolmogorov_complexity,
+    local_kolmogorov_complexity, local_ncd
 )
 from domain_filters.simple import SimpleDomainFilter
 from metric import get_score
@@ -107,17 +107,19 @@ if __name__ == "__main__":
     # prediction_frequency = filter_by_lookup_frequency(
     #    spacetime_evolution=spacetime, display=True
     # )
+    prediction_ncd = local_ncd(spacetime=spacetime)
 
     score_fourier = get_score(predicted=prediction_fourier, expected=defects)
     score_circles = get_score(predicted=prediction_circles, expected=defects)
     score_simple = get_score(predicted=array(prediction_simple), expected=defects)
-    score_frequency = get_score(predicted=prediction_kolmogorov, expected=defects)
+    score_kolmogorov= get_score(predicted=prediction_kolmogorov, expected=defects)
+    score_ncd= get_score(predicted=prediction_ncd, expected=defects)
 
     print(
-        f"Scores:\n\tFourier={score_fourier}\n\tCircles={score_circles}\n\tSimple={score_simple}\n\tLocal Kolmogorov Complexity = {score_frequency}"
+        f"Scores:\n\tFourier={score_fourier}\n\tCircles={score_circles}\n\tSimple={score_simple}\n\tLocal Kolmogorov Complexity = {score_kolmogorov}\n\tLocal NCD = {score_ncd}"
     )
 
-    fig, axs = subplots(6)
+    fig, axs = subplots(7)
     fig.suptitle(arguments.path)
     axs[0].imshow(spacetime, cmap="gray")
     axs[1].imshow(defects, cmap="gray")
@@ -125,4 +127,5 @@ if __name__ == "__main__":
     axs[3].imshow(prediction_circles, cmap="gray")
     axs[4].imshow(prediction_simple, cmap="gray")
     axs[5].imshow(prediction_kolmogorov, cmap="gray")
+    axs[6].imshow(prediction_ncd, cmap="gray")
     show()
