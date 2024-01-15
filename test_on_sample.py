@@ -8,7 +8,7 @@ from numpy import array, frombuffer, ndarray, ones_like, where
 from domain_filters.contours_via_circles import detect_contours
 from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
 from domain_filters.local_kolmogorov_complexity_filter import (
-    local_kolmogorov_complexity, local_ncd
+    local_ncd_2d, local_ncd
 )
 from domain_filters.simple import SimpleDomainFilter
 from metric import get_score
@@ -103,7 +103,7 @@ if __name__ == "__main__":
         threshold=arguments.circles_threshold,
     )
     prediction_simple = simple_domain_filter.classify_spacetime(spacetime=spacetime)
-    prediction_kolmogorov = local_kolmogorov_complexity(spacetime=spacetime)
+    prediction_kolmogorov = local_ncd_2d(spacetime=spacetime)
     # prediction_frequency = filter_by_lookup_frequency(
     #    spacetime_evolution=spacetime, display=True
     # )
