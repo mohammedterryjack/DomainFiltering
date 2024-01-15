@@ -162,6 +162,7 @@ def local_ncd_2d(spacetime: ndarray, neighbourhood_radius: int = 1) -> ndarray:
 
 from eca import OneDimensionalElementaryCellularAutomata
 from matplotlib.pyplot import show, subplots
+from scipy.stats import mode
 
 ca = OneDimensionalElementaryCellularAutomata(lattice_width=500)
 for _ in range(300):
@@ -171,8 +172,12 @@ spacetime = ca.evolution()
 filtered = local_ncd(spacetime, neighbourhood_radius=1)
 filtered2 = local_ncd_2d(spacetime)
 
+thresh, _ = mode(filtered, axis=None)
+thresh2, _ = mode(filtered2, axis=None)
+print(thresh, thresh2)
+
 fig, axs = subplots(3)
 axs[0].imshow(spacetime, cmap="gray")
-axs[1].imshow(filtered)
-axs[2].imshow(filtered2)
+axs[1].imshow(filtered >= thresh, cmap="gray")
+axs[2].imshow(filtered2 >= thresh2, cmap="gray")
 show()
