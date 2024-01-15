@@ -7,9 +7,7 @@ from numpy import array, frombuffer, ndarray, ones_like, where
 
 from domain_filters.contours_via_circles import detect_contours
 from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
-from domain_filters.local_kolmogorov_complexity_filter import (
-    local_ncd_2d, local_ncd
-)
+from domain_filters.local_kolmogorov_complexity_filter import local_ncd, local_ncd_2d
 from domain_filters.simple import SimpleDomainFilter
 from metric import get_score
 
@@ -112,8 +110,8 @@ if __name__ == "__main__":
     score_fourier = get_score(predicted=prediction_fourier, expected=defects)
     score_circles = get_score(predicted=prediction_circles, expected=defects)
     score_simple = get_score(predicted=array(prediction_simple), expected=defects)
-    score_kolmogorov= get_score(predicted=prediction_kolmogorov, expected=defects)
-    score_ncd= get_score(predicted=prediction_ncd, expected=defects)
+    score_kolmogorov = get_score(predicted=prediction_kolmogorov, expected=defects)
+    score_ncd = get_score(predicted=prediction_ncd, expected=defects)
 
     print(
         f"Scores:\n\tFourier={score_fourier}\n\tCircles={score_circles}\n\tSimple={score_simple}\n\tLocal Kolmogorov Complexity = {score_kolmogorov}\n\tLocal NCD = {score_ncd}"
