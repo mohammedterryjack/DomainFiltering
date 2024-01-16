@@ -18,6 +18,12 @@ def vectorise_neighbourhood_1d(spacetime: ndarray, x: int, y: int, r: int) -> li
     return [spacetime[(y, x_i)] for x_i in range(x - r, x + r + 1)]
 
 
+def vectorise_neighbourhood_1d_past(
+    spacetime: ndarray, x: int, y: int, r: int
+) -> list[int]:
+    return [spacetime[(y_i, x)] for y_i in range(y - 2 * r, y)]
+
+
 def vectorise_neighbourhood_2d(
     spacetime: ndarray,
     x: int,
@@ -69,8 +75,6 @@ def normalised_compression_distance_2d(
     x: int,
     y: int,
     neighbourhood_radius: int,
-    width: int,
-    height: int,
 ) -> float:
     return NCD(
         x="".join(
@@ -101,7 +105,7 @@ def normalised_compression_distance(
         x="".join(
             map(
                 str,
-                vectorise_neighbourhood_1d(
+                vectorise_neighbourhood_1d_past(
                     spacetime=spacetime, x=x, y=y - 1, r=neighbourhood_radius
                 ),
             )
@@ -154,30 +158,28 @@ def local_ncd_2d(spacetime: ndarray, neighbourhood_radius: int = 1) -> ndarray:
                 x=x_,
                 y=y_,
                 neighbourhood_radius=neighbourhood_radius,
-                width=w,
-                height=t,
             )
     return filtered
 
 
-from eca import OneDimensionalElementaryCellularAutomata
-from matplotlib.pyplot import show, subplots
-from scipy.stats import mode
+# from eca import OneDimensionalElementaryCellularAutomata
+# from matplotlib.pyplot import show, subplots
+# from scipy.stats import mode
 
-ca = OneDimensionalElementaryCellularAutomata(lattice_width=500)
-for _ in range(300):
-    ca.transition(30)
+# ca = OneDimensionalElementaryCellularAutomata(lattice_width=500)
+# for _ in range(300):
+#     ca.transition(30)
 
-spacetime = ca.evolution()
-filtered = local_ncd(spacetime, neighbourhood_radius=1)
-filtered2 = local_ncd_2d(spacetime)
+# spacetime = ca.evolution()
+# filtered = local_ncd(spacetime, neighbourhood_radius=1)
+# filtered2 = local_ncd_2d(spacetime)
 
-thresh, _ = mode(filtered, axis=None)
-thresh2, _ = mode(filtered2, axis=None)
-print(thresh, thresh2)
+# thresh, _ = mode(filtered, axis=None)
+# thresh2, _ = mode(filtered2, axis=None)
+# print(thresh, thresh2)
 
-fig, axs = subplots(3)
-axs[0].imshow(spacetime, cmap="gray")
-axs[1].imshow(filtered >= thresh, cmap="gray")
-axs[2].imshow(filtered2 >= thresh2, cmap="gray")
-show()
+# fig, axs = subplots(3)
+# axs[0].imshow(spacetime, cmap="gray")
+# axs[1].imshow(filtered, cmap="gray")
+# axs[2].imshow(filtered2 >= thresh2, cmap="gray")
+# show()
