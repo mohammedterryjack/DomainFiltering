@@ -7,7 +7,7 @@ from numpy import array, frombuffer, ndarray, ones_like, where
 
 from domain_filters.contours_via_circles import detect_contours
 from domain_filters.lftsf import LocalisedFourierTransformSelfFilter
-from domain_filters.local_kolmogorov_complexity_filter import local_ncd, local_ncd_2d
+from domain_filters.local_ncd_filter import local_ncd
 from domain_filters.simple import SimpleDomainFilter
 from metric import get_score
 
@@ -101,7 +101,6 @@ if __name__ == "__main__":
         threshold=arguments.circles_threshold,
     )
     prediction_simple = simple_domain_filter.classify_spacetime(spacetime=spacetime)
-    prediction_kolmogorov = local_ncd_2d(spacetime=spacetime)
     # prediction_frequency = filter_by_lookup_frequency(
     #    spacetime_evolution=spacetime, display=True
     # )
@@ -110,20 +109,18 @@ if __name__ == "__main__":
     score_fourier = get_score(predicted=prediction_fourier, expected=defects)
     score_circles = get_score(predicted=prediction_circles, expected=defects)
     score_simple = get_score(predicted=array(prediction_simple), expected=defects)
-    score_kolmogorov = get_score(predicted=prediction_kolmogorov, expected=defects)
     score_ncd = get_score(predicted=prediction_ncd, expected=defects)
 
     print(
-        f"Scores:\n\tFourier={score_fourier}\n\tCircles={score_circles}\n\tSimple={score_simple}\n\tLocal Kolmogorov Complexity = {score_kolmogorov}\n\tLocal NCD = {score_ncd}"
+        f"Scores:\n\tFourier={score_fourier}\n\tCircles={score_circles}\n\tSimple={score_simple}\n\tLocal NCD = {score_ncd}"
     )
 
-    fig, axs = subplots(7)
+    fig, axs = subplots(6)
     fig.suptitle(arguments.path)
     axs[0].imshow(spacetime, cmap="gray")
     axs[1].imshow(defects, cmap="gray")
     axs[2].imshow(prediction_fourier, cmap="gray")
     axs[3].imshow(prediction_circles, cmap="gray")
     axs[4].imshow(prediction_simple, cmap="gray")
-    axs[5].imshow(prediction_kolmogorov, cmap="gray")
-    axs[6].imshow(prediction_ncd, cmap="gray")
+    axs[5].imshow(prediction_ncd, cmap="gray")
     show()
