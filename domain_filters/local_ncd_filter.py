@@ -106,21 +106,54 @@ def local_ncd(spacetime: ndarray, neighbourhood_radius: int = 1) -> ndarray:
     return filtered
 
 
+
+def local_ncd2(spacetime: ndarray, neighbourhood_radius: int = 4) -> ndarray:
+    """Uses past lightcone for input"""
+    def is_domain(neighbourhood:str) -> float:
+        regular_patterns = [
+            '000000000',
+            '111111111',
+            '010101010',
+            '101010101',
+            '110011001',
+            '001100110',
+            '111000111',
+            '000111000',
+            '000011110',
+            '111100001',
+            '000001111',
+            '111110000',
+            '001001001',
+            '110110110',
+            '000110001',
+            '111001110',
+        ]
+        return min(NCD(x=pattern, y=neighbourhood) for pattern in regular_patterns)
+    
+    filtered = zeros_like(spacetime, dtype="float32")
+    t, w = filtered.shape
+    for y_ in range(neighbourhood_radius, t):
+        for x_ in range(neighbourhood_radius, w):
+            neighbourhood_vector = spacetime[y_, x_-neighbourhood_radius:x_+neighbourhood_radius+1]
+            filtered[y_, x_] = 1- is_domain(
+                neighbourhood=''.join(map(str,neighbourhood_vector))
+            )
+    return filtered
+
+
+
 # from eca import OneDimensionalElementaryCellularAutomata
 # from matplotlib.pyplot import show, subplots
 # from scipy.stats import mode
 
-# ca = OneDimensionalElementaryCellularAutomata(lattice_width=500)
-# for _ in range(300):
+# ca = OneDimensionalElementaryCellularAutomata(lattice_width=300)
+# for _ in range(100):
 #     ca.transition(110)
 
 # spacetime = ca.evolution()
-# filtered = local_ncd(spacetime)
+# filtered = local_ncd2(spacetime)
 
-# thresh, _ = mode(filtered, axis=None)
-
-# fig, axs = subplots(3)
+# fig, axs = subplots(2)
 # axs[0].imshow(spacetime, cmap="gray")
 # axs[1].imshow(filtered, cmap="gray")
-# axs[2].imshow(filtered < thresh, cmap="gray")
 # show()
