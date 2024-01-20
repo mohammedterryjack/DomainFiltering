@@ -108,7 +108,7 @@ def local_ncd(spacetime: ndarray, neighbourhood_radius: int = 1) -> ndarray:
 
 
 def local_ncd2(spacetime: ndarray, neighbourhood_radius: int = 4) -> ndarray:
-    """Uses past lightcone for input"""
+    """NCD gives distance from neighbourhood to several regular domain patterns. The minimum distance is taken to see if the neighbourhood was similar to any regular domain patterns"""
     def is_domain(neighbourhood:str) -> float:
         regular_patterns = [
             '000000000',
